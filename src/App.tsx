@@ -4,10 +4,8 @@ import fetchPhotos from "./fetchPhotos"; // Assuming you have this function impl
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import ImageModal from "./components/ImageModal/ImageModal";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
-import ErrorMessage from "./ErrorMassage/ErrorMessage"; // Corrected import path
+import ErrorMessage from "./components/ErrorMassage/ErrorMessage"; // Corrected import path
 import Loader from "./components/Loader/Loader";
-
-import "./App.css";
 
 interface Photo {
   id: number;
@@ -23,27 +21,28 @@ const App: React.FC = () => {
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalData, setModalData] = useState<Photo | null>(null);
 
-  useEffect(() => {
-    async function searchPictures() {
-      if (query === "") {
-        return;
-      }
-      setError(false);
-      setLoading(true);
-      try {
-        const apiRequest = await fetchPhotos(query, page);
-        setPhotos((prevState) => [...prevState, ...apiRequest]);
-      } catch (error) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
+  async function searchPictures() {
+    if (query === "") {
+      return;
     }
+    setError(false);
+    setLoading(true);
+    try {
+      const apiRequest = await fetchPhotos(query, page);
+      setPhotos((prevState) => [...prevState, ...apiRequest]);
+    } catch (error) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
     searchPictures();
   }, [query, page]);
 
   function onFormSubmit(searchedWord: string) {
-    if (query.toLowerCase() !== searchedWord.toLowerCase()) {
+    if (searchedWord.trim() !== "") {
       setPhotos([]);
       setQuery(searchedWord);
     }
