@@ -22,7 +22,7 @@ const App: React.FC = () => {
   const [modalData, setModalData] = useState<Photo | null>(null);
 
   async function searchPictures() {
-    if (query === "") {
+    if (query.trim() === "") {
       return;
     }
     setError(false);
